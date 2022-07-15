@@ -1,3 +1,5 @@
+# https://circleci.com/developer/ja/orbs/orb/circleci/ruby
+
 version: 2.1
 
 # https://circleci.com/docs/ja/orb-intro/
