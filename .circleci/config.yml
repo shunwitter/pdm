@@ -1,7 +1,4 @@
 version: 2.1
-orbs:
-  node: circleci/node@5.0.2
-  ruby: circleci/ruby@1.8.0
 jobs:
   build:
     docker:
