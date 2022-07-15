@@ -8,8 +8,4 @@ jobs:
       - image: cimg/ruby:3.1.2-node
     steps:
       - checkout
-      - run: echo "hello circle ci"
-workflows:
-  build_and_test:
-    jobs:
-      - build
+      - run: ruby --version
