@@ -1,11 +1,7 @@
 version: 2.1
-
-# 設定で使用する Orb を宣言します。
-# Orb に関する詳細は、 https://circleci.com/docs/ja/orb-intro/ をご覧ください。
 orbs:
   ruby: circleci/ruby@1.0
   node: circleci/node@2
-
 jobs:
   build:
     docker:
@@ -14,7 +10,6 @@ jobs:
       - checkout
       - ruby/install-deps
       - node/install-packages
-
   test:
     parallelism: 3
     docker:
@@ -35,16 +30,13 @@ jobs:
       - checkout
       - ruby/install-deps
       - node/install-packages
-
   - run:
       name: DB の待機
       command: dockerize -wait tcp://localhost:5432 -timeout 1m
-
   - run:
       name: データベースのセットアップ
       command: bundle exec rails db:schema:load --trace
       - ruby/rspec-test
-
 workflows:
   version: 2
   build_and_test:
