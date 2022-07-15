@@ -15,3 +15,7 @@ jobs:
       - ruby/install-deps
       # - node/install-packages:
       - run: echo "Hello, CircleCI"
+workflows:
+  build_and_test:
+    jobs:
+      - build
