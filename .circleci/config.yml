@@ -1,47 +1,35 @@
 version: 2.1
-orbs:
-  ruby: circleci/ruby@1.0
-  node: circleci/node@2
 jobs:
-  build:
-    docker:
-      - image: cimg/ruby:2.7-node
-    steps:
-      - checkout
-      - ruby/install-deps
-      - node/install-packages
   test:
-    parallelism: 3
     docker:
       - image: cimg/ruby:2.7-node
+        environment:
+          RAILS_ENV: test
+          DATABASE_HOST: 127.0.0.1
       - image: cimg/postgres:14.0
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: pdm_test
           POSTGRES_PASSWORD: password
-    environment:
-      BUNDLE_JOBS: "3"
-      BUNDLE_RETRY: "3"
-      PGHOST: 127.0.0.1
-      PGUSER: postgres
-      PGPASSWORD: password
-      RAILS_ENV: test
     steps:
       - checkout
-      - ruby/install-deps
-      - node/install-packages
-  - run:
-      name: DB の待機
-      command: dockerize -wait tcp://localhost:5432 -timeout 1m
-  - run:
-      name: データベースのセットアップ
-      command: bundle exec rails db:schema:load --trace
-      - ruby/rspec-test
+      - run:
+          name: "bundle install"
+          command: bundle install --path vendor/bundle
+      # DBと接続できるまで待機
+      - run:
+          name: "waiting DB start"
+          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
+      - run:
+          name: "initialize DB"
+          command: |
+            bundle exec rake db:create
+            bundle exec rake db:migrate
+      #- run:
+          #name: RSpec
+          #command: bundle exec rspec
 workflows:
   version: 2
-  build_and_test:
+  workflows:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - test
