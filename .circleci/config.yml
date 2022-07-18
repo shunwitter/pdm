@@ -6,3 +6,7 @@ jobs:
     steps:
       - checkout
       - run: ruby --version
+workflows:
+  build:
+    jobs:
+      - build
