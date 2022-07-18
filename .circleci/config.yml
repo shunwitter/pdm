@@ -7,6 +7,6 @@ jobs:
       - checkout
       - run: ruby --version
 workflows:
-  build:
+  just_build:
     jobs:
       - build
